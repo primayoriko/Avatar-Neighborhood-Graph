@@ -1,20 +1,20 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import { TextField, Link, Button, Typography, makeStyles } from '@material-ui/core/';
+import { CssBaseline, Container, Box, Grid  } from '@material-ui/core/';
+import Graph from './Graph';
+
 import { spacing } from '@material-ui/system';
 // import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 // import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import Checkbox from '@material-ui/core/Checkbox';
 // import Avatar from '@material-ui/core/Avatar';
-
-
+// import Grid from '@material-ui/core/Grid';
+// import Box from '@material-ui/core/Box';
+// import TextField from '@material-ui/core/TextField';
+// import { makeStyles } from '@material-ui/core/styles';
+// import CssBaseline from '@material-ui/core/CssBaseline';
+// import Button from '@material-ui/core/Button';
+// import Container from '@material-ui/core/Container';
 
 function Copyright() {
     return (
@@ -32,7 +32,7 @@ function Copyright() {
 class Content extends React.Component {
     constructor(props){
         super(props);
-        this.state = { query : "", show : false, friend : {}, self : {}, status : -999 };
+        this.state = { query : "", show : false, friend : {}, self : {}, status : -999, data : [] };
         // this.searchQuery = this.searchQuery.bind(this);
     }
 
@@ -59,6 +59,24 @@ class Content extends React.Component {
         this.setState({ show : true});
         fetch(url).then((res) => res.json())
                     .then((data) => this.parseData(data));
+    }
+
+    renderGraph(){
+        this.fetchResult();
+        const child = Object.keys(this.state.friend).map((key) => {
+            return { name : this.state.friend[key].id };
+        });
+        return (
+            <Box>
+                {
+                    child.map((key) => ( 
+                        <p> {key} : {child[key].name} </p> 
+                    ))
+                }
+            </Box>
+        );
+        // console.log(child);
+        // this.setState({ data : child }); //{ name : this.state.id, children : child } });
     }
 
     displayElement(elmt){
@@ -128,10 +146,9 @@ class Content extends React.Component {
                             required
                             fullWidth
                             id="search"
-                            //label="Search"
                             name="search"
                             onChange={(event) => this.searchQuery(event)}
-                            //autoComplete="email"
+                            autoComplete="search"
                         />
                         </Grid>
                     </Grid>
@@ -141,7 +158,7 @@ class Content extends React.Component {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={() => this.fetchResult()}
+                        onClick={() => this.renderGraph()}
                     >
                         Search!
                     </Button>
@@ -153,17 +170,22 @@ class Content extends React.Component {
                         </Grid>
                     </Grid> */}
                     </form>
-                    <Box>
-                        { this.state.status }
-                    </Box>
-                    <Box>
-                        { () => this.displayResult() }
-                    </Box>
+                    
                 </Box>
                 <Box mt={5}>
                     <Copyright />
                 </Box>
-                
+                <Box>
+                    { this.state.status }
+                </Box>
+                <Box>
+                    { () => this.displayResult() }
+                </Box>
+                {/* <Graph data={this.state.data} height={400} width={400} /> */}
+                <Box>
+                    {/* { () => this.renderGraph() } */}
+                    {/* { this.state.data } */}
+                </Box>
             </Container>
         );
     }
