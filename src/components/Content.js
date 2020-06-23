@@ -32,32 +32,64 @@ function Copyright() {
 class Content extends React.Component {
     constructor(props){
         super(props);
+        this.state = { query : "", show : false, friend : {}, self : {}, status : -999 };
         // this.searchQuery = this.searchQuery.bind(this);
-        this.state = { query : "", show : false, friend : {}, self : {}, status : 200 };
     }
 
     searchQuery(event){
         this.setState({ query : event.target.value });
     }
 
+    parseData(data){
+        this.setState({ status : data.status });
+        if( data.status === 200 ){
+            this.setState({ friend : data.payload.friends,
+                            self : { "id" : data.payload.id,
+                                        "name" : data.payload.name,
+                                        "element" : data.payload.element
+                                    }
+                            });
+        } 
+        // console.log(data.status);
+        // this.setState({ result : data });
+    }
+
     fetchResult(){
         const url = 'https://avatar.labpro.dev/friends/' + this.state.query;
         this.setState({ show : true});
         fetch(url).then((res) => res.json())
-                    .then((data) => {
-                        // this.setState({ result : data });
-                        this.setState({ status : data.status });
-                        if( data.status == 200 ){
-                            this.setState({ friend : data.payload.friend,
-                                            self : { "id" : data.payload.id,
-                                                        "name" : data.payload.name,
-                                                        "element" : data.payload.name
-                                                    }
-                                            });
-                        } 
-                        console.log(data.status);
-                    });
-            
+                    .then((data) => this.parseData(data));
+    }
+
+    displayElement(elmt){
+        return (
+            <Box>
+                {
+                    Object.keys(elmt).map((key, index) => ( 
+                        <p key={index}> {key} : {elmt[key]} </p> 
+                    ))
+                }
+            </Box>
+        );
+    }
+
+    displayResult(){
+        return (
+            <Box>
+                <Box>
+                    { () => this.displayElement(this.state.self) }
+                </Box>
+                <Box>
+                    {
+                        Object.keys(this.state.friend).map((key, index) => ( 
+                            <Box>
+                                { () => this.displayElement(this.state.friend[key]) }
+                            </Box> 
+                        ))
+                    } 
+                </Box>
+            </Box>
+        );
     }
 
     render(){
@@ -85,9 +117,6 @@ class Content extends React.Component {
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box className={classes.paper} mt={6}>
-                    {/* <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                    </Avatar> */}
                     <Typography component="h1" variant="h5">
                     Avatar Neighborhood Site
                     </Typography>
@@ -125,30 +154,16 @@ class Content extends React.Component {
                     </Grid> */}
                     </form>
                     <Box>
-                        { () => {
-                                // if(this.state.show){
-                                    return this.state.result;
-                                // }
-                            }
-                        }
+                        { this.state.status }
                     </Box>
-                    { 
-                        // this.state.result.map(item => <Box>{item}</Box>)
-                        // () => {
-                        //     if(this.state.show){
-                        //         return (
-                        //             <Box>
-                        //                 <p> this.state.query </p>
-                        //                 {/* <p> this.state.result </p> */}
-                        //             </Box>
-                        //         );    
-                        //     }  
-                        // }
-                    }
+                    <Box>
+                        { () => this.displayResult() }
+                    </Box>
                 </Box>
                 <Box mt={5}>
                     <Copyright />
                 </Box>
+                
             </Container>
         );
     }
