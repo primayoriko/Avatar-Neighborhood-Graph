@@ -32,7 +32,7 @@ function Copyright() {
 class Content extends React.Component {
     constructor(props){
         super(props);
-        this.state = { query : "", show : false, friend : {}, self : {}, status : -999, data : [] };
+        this.state = { query : "", friend : [], self : {}, status : -999, data : [], show : false };
         // this.searchQuery = this.searchQuery.bind(this);
     }
 
@@ -43,40 +43,30 @@ class Content extends React.Component {
     parseData(data){
         this.setState({ status : data.status });
         if( data.status === 200 ){
-            this.setState({ friend : data.payload.friends,
-                            self : { "id" : data.payload.id,
-                                        "name" : data.payload.name,
-                                        "element" : data.payload.element
+            this.setState({ 
+                            friend : data.payload.friends,
+                            self : { 
+                                        id : data.payload.id,
+                                        name : data.payload.name,
+                                        element : data.payload.element
                                     }
-                            });
+                        });
         } 
-        // console.log(data.status);
-        // this.setState({ result : data });
     }
 
-    fetchResult(){
+    async fetchResult(){
         const url = 'https://avatar.labpro.dev/friends/' + this.state.query;
-        this.setState({ show : true});
-        fetch(url).then((res) => res.json())
+        this.setState({ show : true });
+        await fetch(url).then((res) => res.json())
                     .then((data) => this.parseData(data));
     }
 
-    renderGraph(){
-        this.fetchResult();
+    async renderGraph(){
+        await this.fetchResult();
         const child = Object.keys(this.state.friend).map((key) => {
             return { name : this.state.friend[key].id };
         });
-        return (
-            <Box>
-                {
-                    child.map((key) => ( 
-                        <p> {key} : {child[key].name} </p> 
-                    ))
-                }
-            </Box>
-        );
-        // console.log(child);
-        // this.setState({ data : child }); //{ name : this.state.id, children : child } });
+        this.setState({ data : { name : this.state.self.id, children : child } });
     }
 
     displayElement(elmt){
@@ -113,24 +103,32 @@ class Content extends React.Component {
     render(){
         const classes = makeStyles((theme) => ({
             paper: {
-              marginTop: theme.spacing(8),
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+                marginTop: theme.spacing(8),
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
             },
             avatar: {
-              margin: theme.spacing(1),
-              backgroundColor: theme.palette.secondary.main,
+                margin: theme.spacing(1),
+                backgroundColor: theme.palette.secondary.main,
             },
             form: {
-              width: '100%',
-              marginTop: theme.spacing(3),
+                width: '100%',
+                marginTop: theme.spacing(3),
             },
             submit: {
-              margin: theme.spacing(3, 0, 2),
+                margin: theme.spacing(3, 0, 2),
             },
-          }));
-
+        }));
+        
+        // const data = {
+        //     name: 'Parent',
+        //     children: [{
+        //         name: 'Child One'
+        //     }, {
+        //         name: 'Child Two'
+        //     }]
+        // };
         return (
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
@@ -178,14 +176,13 @@ class Content extends React.Component {
                 <Box>
                     { this.state.status }
                 </Box>
+                <Graph data={this.state.data} height={400} width={400} />
                 <Box>
+                    { JSON.stringify(this.state.data) }
+                </Box>
+                {/* <Box>
                     { () => this.displayResult() }
-                </Box>
-                {/* <Graph data={this.state.data} height={400} width={400} /> */}
-                <Box>
-                    {/* { () => this.renderGraph() } */}
-                    {/* { this.state.data } */}
-                </Box>
+                </Box> */}
             </Container>
         );
     }
