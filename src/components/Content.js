@@ -32,7 +32,7 @@ function Copyright() {
 class Content extends React.Component {
     constructor(props){
         super(props);
-        this.state = { query : "", friend : [], self : {}, status : -999, data : [], show : false };
+        this.state = { query : "", status : -999, data : {}, show : false, test : {} };
         // this.searchQuery = this.searchQuery.bind(this);
     }
 
@@ -43,30 +43,34 @@ class Content extends React.Component {
     parseData(data){
         this.setState({ status : data.status });
         if( data.status === 200 ){
-            this.setState({ 
-                            friend : data.payload.friends,
-                            self : { 
-                                        id : data.payload.id,
-                                        name : data.payload.name,
-                                        element : data.payload.element
-                                    }
-                        });
+            return { 
+                        friend : data.payload.friends,
+                        self : { 
+                                    id : data.payload.id,
+                                    name : data.payload.name,
+                                    element : data.payload.element
+                                }
+                    };
         } 
+        return {};
     }
 
     async fetchResult(){
         const url = 'https://avatar.labpro.dev/friends/' + this.state.query;
-        this.setState({ show : true });
-        await fetch(url).then((res) => res.json())
+        const data = await fetch(url).then((res) => res.json())
                     .then((data) => this.parseData(data));
+        const child = Object.keys(data.friend).map((key) => {
+            return { name : data.friend[key].id };
+        });
+        this.setState({ data : { name : data.self.id, children : child }, show : true });
     }
 
-    async renderGraph(){
-        await this.fetchResult();
-        const child = Object.keys(this.state.friend).map((key) => {
-            return { name : this.state.friend[key].id };
-        });
-        this.setState({ data : { name : this.state.self.id, children : child } });
+    showGraph(){
+        if(this.state.show){
+            return (
+                <Graph data={this.state.data} height={400} width={400} />
+            );
+        }
     }
 
     displayElement(elmt){
@@ -156,7 +160,7 @@ class Content extends React.Component {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={() => this.renderGraph()}
+                        onClick={() => this.fetchResult()}
                     >
                         Search!
                     </Button>
@@ -176,10 +180,13 @@ class Content extends React.Component {
                 <Box>
                     { this.state.status }
                 </Box>
-                <Graph data={this.state.data} height={400} width={400} />
-                <Box>
+                { this.showGraph() }
+                {/* <Box>
                     { JSON.stringify(this.state.data) }
-                </Box>
+                </Box> */}
+                {/* <Box>
+                    { JSON.stringify(this.state.test) }
+                </Box> */}
                 {/* <Box>
                     { () => this.displayResult() }
                 </Box> */}
