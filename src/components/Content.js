@@ -3,7 +3,7 @@ import { TextField, Link, Button, Typography, makeStyles } from '@material-ui/co
 import { CssBaseline, Container, Box, Grid  } from '@material-ui/core/';
 import Graph from './Graph';
 
-import { spacing } from '@material-ui/system';
+// import { spacing } from '@material-ui/system';
 // import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 // import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import Checkbox from '@material-ui/core/Checkbox';
@@ -125,14 +125,6 @@ class Content extends React.Component {
             },
         }));
         
-        // const data = {
-        //     name: 'Parent',
-        //     children: [{
-        //         name: 'Child One'
-        //     }, {
-        //         name: 'Child Two'
-        //     }]
-        // };
         return (
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
@@ -141,38 +133,30 @@ class Content extends React.Component {
                     Avatar Neighborhood Site
                     </Typography>
                     <form className={classes.form} noValidate>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                        <TextField
-                            variant="outlined"
-                            required
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="search"
+                                name="search"
+                                onChange={(event) => this.searchQuery(event)}
+                                autoComplete="search"
+                            />
+                            </Grid>
+                        </Grid>
+                        <Button
+                            //type="submit"
                             fullWidth
-                            id="search"
-                            name="search"
-                            onChange={(event) => this.searchQuery(event)}
-                            autoComplete="search"
-                        />
-                        </Grid>
-                    </Grid>
-                    <Button
-                        //type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                        onClick={() => this.fetchResult()}
-                    >
-                        Search!
-                    </Button>
-                    {/* <Grid container justify="flex-end">
-                        <Grid item>
-                        <Link href="#" variant="body2">
-                            Already have an account? Sign in
-                        </Link>
-                        </Grid>
-                    </Grid> */}
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                            onClick={() => this.fetchResult()}
+                        >
+                            Search!
+                        </Button>
                     </form>
-                    
                 </Box>
                 <Box mt={5}>
                     <Copyright />
