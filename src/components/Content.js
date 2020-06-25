@@ -2,6 +2,8 @@ import React from 'react';
 import { TextField, Link, Button, Typography, makeStyles } from '@material-ui/core/';
 import { CssBaseline, Container, Box, Grid  } from '@material-ui/core/';
 import Graph from './Graph';
+import Tree from 'react-tree-graph';
+import 'react-tree-graph/dist/style.css';
 
 // import { spacing } from '@material-ui/system';
 // import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -31,7 +33,7 @@ function Copyright() {
 class Content extends React.Component {
     constructor(props){
         super(props);
-        this.state = { query : "", status : -999, message : "", data : {}, show : false, test : {} };
+        this.state = { query : "", status : -999, message : "", data : {}, show : false, test : {}, turn : 1 };
     }
 
     changeQuery(event){
@@ -90,7 +92,8 @@ class Content extends React.Component {
                 self["children"] = child;
                 this.setState({ 
                                 data : self,
-                                show : true, 
+                                show : true,
+                                turn : (this.state.turn % 2) + 1 
                                 // test : data 
                             });
             } else {
@@ -102,64 +105,30 @@ class Content extends React.Component {
         
     }
 
-    async fetchResult2(event = null, key){
-        this.setState({ data : { }, show : true });
-    }
-
-    showGraph(){
-        if(this.state.show){
-            if(this.state.status === 200){
-                return (
-                    <Box mt={3}>
-                        <Graph data={this.state.data} height={400} width={400} />
-                    </Box>
-                );
-            }
-            else{
-                return (
-                    <Box>
-                        <Typography component="h1" variant="h4">
-                            ERROR {this.state.code}!
-                        </Typography>
-                        <Typography component="h1" variant="h6">
-                            Image can't be displayed
-                        </Typography>
-                    </Box>
-                );
-            }
-            
+    showGraph(turn){
+        if(this.state.show && this.state.turn === turn){
+            return (
+                <Box mt={3}>
+                    <Tree data={this.state.data} height={400} width={450} />
+                </Box>
+            );
+        } else {
+            return <Box> </Box>
         }
-    }
-
-    displayElement(elmt){
-        return (
-            <Box>
-                {
-                    Object.keys(elmt).map((key, index) => ( 
-                        <p key={index}> {key} : {elmt[key]} </p> 
-                    ))
-                }
-            </Box>
-        );
-    }
-
-    displayResult(){
-        return (
-            <Box>
-                <Box>
-                    { () => this.displayElement(this.state.self) }
-                </Box>
-                <Box>
-                    {
-                        Object.keys(this.state.friend).map((key, index) => ( 
-                            <Box>
-                                { () => this.displayElement(this.state.friend[key]) }
-                            </Box> 
-                        ))
-                    } 
-                </Box>
-            </Box>
-        );
+            // if(this.state.status === 200){
+            // }
+            // else{
+            //     return (
+            //         <Box>
+            //             <Typography component="h1" variant="h4">
+            //                 ERROR {this.state.code}!
+            //             </Typography>
+            //             <Typography component="h1" variant="h6">
+            //                 Image can't be displayed
+            //             </Typography>
+            //         </Box>
+            //     );
+            // }
     }
 
     render(){
@@ -216,6 +185,13 @@ class Content extends React.Component {
                         </Button>
                     </Box>
                 </Box>
+                
+                { this.showGraph(1) }
+                { this.showGraph(2) }
+                
+                <Box mt={5}>
+                    <Copyright />
+                </Box>
                 {/* <Box>
                     { this.state.status }
                 </Box> */}
@@ -225,10 +201,6 @@ class Content extends React.Component {
                 {/* <Box>
                     { JSON.stringify(this.state.data) }
                 </Box> */}
-                { this.showGraph() }
-                <Box mt={5}>
-                    <Copyright />
-                </Box>
             </Container>
         );
     }
