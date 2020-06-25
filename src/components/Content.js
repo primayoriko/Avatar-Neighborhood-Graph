@@ -53,7 +53,7 @@ class Content extends React.Component {
         return {};
     }
 
-    filterData(data, filteredValue){
+    filterFriendData(data, filteredValue){
         data.sort()
         var res = []
         if(data.length !== 0 && data[0].id !== filteredValue){
@@ -67,17 +67,32 @@ class Content extends React.Component {
         return res;
     }
 
+    fillNodeData(node){
+        return { 
+            name : `${node.id} ${node.name}`, 
+            gProps : { 
+                        className : `node ${node.element}`, 
+                        onClick : (event, key) => this.fetchResult(event, key) 
+                    } 
+        };
+    }
+
     async fetchResult(event = null, key){
+        key = key.split(" ")[0];
         if(!isNaN(key)){
             const url = 'https://avatar.labpro.dev/friends/' + key;
             const data = await fetch(url).then((res) => res.json())
                         .then((data) => this.parseData(data));
             if (this.state.status === 200){
-                const filteredFriend = this.filterData(Object.values(data.friend), data.self.id)
-                const child = filteredFriend.map((value) => {
-                    return { name : value.id, gProps : { onClick : (event, key) => this.fetchResult(event, key) } };
-                });
-                this.setState({ data : { name : data.self.id, children : child }, show : true, test : data });
+                const filteredFriend = this.filterFriendData(Object.values(data.friend), data.self.id)
+                const self = this.fillNodeData(data.self) 
+                const child = filteredFriend.map((node) => this.fillNodeData(node)) //{
+                self["children"] = child;
+                this.setState({ 
+                                data : self,
+                                show : true, 
+                                // test : data 
+                            });
             } else {
                 alert(`Error ${this.state.status}\n${this.state.message}`);
             }
