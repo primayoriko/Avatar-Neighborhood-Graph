@@ -36,7 +36,7 @@ class Content extends React.Component {
         // this.searchQuery = this.searchQuery.bind(this);
     }
 
-    searchQuery(event){
+    changeQuery(event){
         this.setState({ query : event.target.value });
     }
 
@@ -55,12 +55,12 @@ class Content extends React.Component {
         return {};
     }
 
-    async fetchResult(){
-        const url = 'https://avatar.labpro.dev/friends/' + this.state.query;
+    async fetchResult(event = null, key){
+        const url = 'https://avatar.labpro.dev/friends/' + key;
         const data = await fetch(url).then((res) => res.json())
                     .then((data) => this.parseData(data));
         const child = Object.keys(data.friend).map((key) => {
-            return { name : data.friend[key].id };
+            return { name : data.friend[key].id, gProps : { onClick : (event, key) => this.fetchResult(event, key) } };
         });
         this.setState({ data : { name : data.self.id, children : child }, show : true });
     }
@@ -141,7 +141,7 @@ class Content extends React.Component {
                                 fullWidth
                                 id="search"
                                 name="search"
-                                onChange={(event) => this.searchQuery(event)}
+                                onChange={(event) => this.changeQuery(event)}
                                 autoComplete="search"
                             />
                             </Grid>
@@ -152,7 +152,7 @@ class Content extends React.Component {
                             variant="contained"
                             color="primary"
                             className={classes.submit}
-                            onClick={() => this.fetchResult()}
+                            onClick={() => this.fetchResult(undefined, this.state.query)}
                         >
                             Search!
                         </Button>
