@@ -1,9 +1,10 @@
 import React from 'react';
 import { TextField, Link, Button, Typography, makeStyles } from '@material-ui/core/';
 import { CssBaseline, Container, Box, Grid  } from '@material-ui/core/';
-import Graph from './Graph';
 import Tree from 'react-tree-graph';
+
 import 'react-tree-graph/dist/style.css';
+import './style/tree.css'
 
 // import { spacing } from '@material-ui/system';
 // import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -188,7 +189,7 @@ class Content extends React.Component {
                 
                 { this.showGraph(1) }
                 { this.showGraph(2) }
-                
+
                 <Box mt={5}>
                     <Copyright />
                 </Box>

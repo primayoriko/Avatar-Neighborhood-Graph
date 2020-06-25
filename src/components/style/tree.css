@@ -1,15 +1,16 @@
 .node circle {
     stroke-width: 13px;
+	cursor: pointer;
+}
+
+.node circle:hover {
+    stroke : rgb(218, 226, 109);
 }
 
 .node text {
 	font-size: 12px;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	background-color: black;
-}
-
-.node circle {
-	cursor: pointer;
 }
 
 .earth text {
