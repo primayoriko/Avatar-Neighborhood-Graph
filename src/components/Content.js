@@ -31,7 +31,7 @@ function Copyright() {
 class Content extends React.Component {
     constructor(props){
         super(props);
-        this.state = { query : "", status : -999, data : {}, show : false, test : {} };
+        this.state = { query : "", status : -999, message : "", data : {}, show : false, test : {} };
     }
 
     changeQuery(event){
@@ -39,7 +39,7 @@ class Content extends React.Component {
     }
 
     parseData(data){
-        this.setState({ status : data.status });
+        this.setState({ status : data.status, message : data.message });
         if( data.status === 200 ){
             return { 
                         friend : data.payload.friends,
@@ -68,14 +68,23 @@ class Content extends React.Component {
     }
 
     async fetchResult(event = null, key){
-        const url = 'https://avatar.labpro.dev/friends/' + key;
-        const data = await fetch(url).then((res) => res.json())
-                    .then((data) => this.parseData(data));
-        const filteredFriend = this.filterData(Object.values(data.friend), data.self.id)
-        const child = filteredFriend.map((value) => {
-            return { name : value.id, gProps : { onClick : (event, key) => this.fetchResult(event, key) } };
-        });
-        this.setState({ data : { name : data.self.id, children : child }, show : true, test : data });
+        if(!isNaN(key)){
+            const url = 'https://avatar.labpro.dev/friends/' + key;
+            const data = await fetch(url).then((res) => res.json())
+                        .then((data) => this.parseData(data));
+            if (this.state.status === 200){
+                const filteredFriend = this.filterData(Object.values(data.friend), data.self.id)
+                const child = filteredFriend.map((value) => {
+                    return { name : value.id, gProps : { onClick : (event, key) => this.fetchResult(event, key) } };
+                });
+                this.setState({ data : { name : data.self.id, children : child }, show : true, test : data });
+            } else {
+                alert(`Error ${this.state.status}\n${this.state.message}`);
+            }
+        } else {
+            alert(`Value inputted should be a number!\n${key} isn't a number`);
+        }
+        
     }
 
     async fetchResult2(event = null, key){
@@ -86,7 +95,9 @@ class Content extends React.Component {
         if(this.state.show){
             if(this.state.status === 200){
                 return (
-                    <Graph data={this.state.data} height={400} width={400} />
+                    <Box mt={3}>
+                        <Graph data={this.state.data} height={400} width={400} />
+                    </Box>
                 );
             }
             else{
@@ -162,9 +173,9 @@ class Content extends React.Component {
                 <CssBaseline />
                 <Box className={classes.paper} mt={6}>
                     <Typography component="h1" variant="h5">
-                    Avatar Neighborhood Site
+                        Search ID
                     </Typography>
-                    <form className={classes.form} noValidate>
+                    <Box className={classes.form}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                             <TextField
@@ -179,7 +190,7 @@ class Content extends React.Component {
                             </Grid>
                         </Grid>
                         <Button
-                            //type="submit"
+                            // type="submit"
                             fullWidth
                             variant="contained"
                             color="primary"
@@ -188,7 +199,7 @@ class Content extends React.Component {
                         >
                             Search!
                         </Button>
-                    </form>
+                    </Box>
                 </Box>
                 {/* <Box>
                     { this.state.status }
