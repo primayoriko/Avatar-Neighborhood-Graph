@@ -18,14 +18,13 @@ import Graph from './Graph';
 
 function Copyright() {
     return (
-      <Typography variant="body2" color="textSecondary" align="center">
-        {'Copyright © '}
-        <Link color="inherit" href="https://material-ui.com/">
-          Your Website
-        </Link>{' '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
+        <Typography variant="body2" color="textSecondary" align="center">
+            {'Copyright © '}
+            <Link color="inherit" href="https://primayoriko.github.io/">
+                Naufal Prima Yoriko - 13518146, IF ITB '18
+            </Link>{' '}
+            <p>{new Date().getFullYear()}</p>
+        </Typography>
     );
 }
 
@@ -33,7 +32,6 @@ class Content extends React.Component {
     constructor(props){
         super(props);
         this.state = { query : "", status : -999, data : {}, show : false, test : {} };
-        // this.searchQuery = this.searchQuery.bind(this);
     }
 
     changeQuery(event){
@@ -55,21 +53,55 @@ class Content extends React.Component {
         return {};
     }
 
+    filterData(data, filteredValue){
+        data.sort()
+        var res = []
+        if(data.length !== 0 && data[0].id !== filteredValue){
+            res.push(data[0]);
+        }
+        for(var i = 1; i < data.length; i++){
+            if(data[i].id !== data[i - 1].id && data[i].id !== filteredValue ){
+                res.push(data[i]);
+            }
+        }
+        return res;
+    }
+
     async fetchResult(event = null, key){
         const url = 'https://avatar.labpro.dev/friends/' + key;
         const data = await fetch(url).then((res) => res.json())
                     .then((data) => this.parseData(data));
-        const child = Object.keys(data.friend).map((key) => {
-            return { name : data.friend[key].id, gProps : { onClick : (event, key) => this.fetchResult(event, key) } };
+        const filteredFriend = this.filterData(Object.values(data.friend), data.self.id)
+        const child = filteredFriend.map((value) => {
+            return { name : value.id, gProps : { onClick : (event, key) => this.fetchResult(event, key) } };
         });
-        this.setState({ data : { name : data.self.id, children : child }, show : true });
+        this.setState({ data : { name : data.self.id, children : child }, show : true, test : data });
+    }
+
+    async fetchResult2(event = null, key){
+        this.setState({ data : { }, show : true });
     }
 
     showGraph(){
         if(this.state.show){
-            return (
-                <Graph data={this.state.data} height={400} width={400} />
-            );
+            if(this.state.status === 200){
+                return (
+                    <Graph data={this.state.data} height={400} width={400} />
+                );
+            }
+            else{
+                return (
+                    <Box>
+                        <Typography component="h1" variant="h4">
+                            ERROR {this.state.code}!
+                        </Typography>
+                        <Typography component="h1" variant="h6">
+                            Image can't be displayed
+                        </Typography>
+                    </Box>
+                );
+            }
+            
         }
     }
 
@@ -158,22 +190,19 @@ class Content extends React.Component {
                         </Button>
                     </form>
                 </Box>
-                <Box mt={5}>
-                    <Copyright />
-                </Box>
-                <Box>
-                    { this.state.status }
-                </Box>
-                { this.showGraph() }
                 {/* <Box>
-                    { JSON.stringify(this.state.data) }
+                    { this.state.status }
                 </Box> */}
                 {/* <Box>
                     { JSON.stringify(this.state.test) }
                 </Box> */}
                 {/* <Box>
-                    { () => this.displayResult() }
+                    { JSON.stringify(this.state.data) }
                 </Box> */}
+                { this.showGraph() }
+                <Box mt={5}>
+                    <Copyright />
+                </Box>
             </Container>
         );
     }
