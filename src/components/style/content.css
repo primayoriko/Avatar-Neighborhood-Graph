@@ -13,3 +13,8 @@
     height: auto;
     resize: auto;
 }
+
+.icon {
+    font-size: 32;
+    cursor: pointer;
+}

@@ -19,6 +19,10 @@ class Content extends React.Component {
         this.setState({ query : event.target.value });
     }
 
+    clearResult(){
+        this.setState({ show: false });
+    }
+
     parseData(data){
         this.setState({ status : data.status, message : data.message });
         if( data.status === 200 ){
@@ -99,7 +103,7 @@ class Content extends React.Component {
         if(this.state.show){
             return (
                 <Box mt={2}>
-                    <RevertIcon style={{ fontSize: 32 }} />
+                    <RevertIcon className="icon" onClick={ () => this.clearResult() } />
                 </Box>
             );
         }
