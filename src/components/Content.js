@@ -2,6 +2,8 @@ import React from 'react';
 import { TextField, Link, Button, Typography, makeStyles } from '@material-ui/core/';
 import { CssBaseline, Container, Box, Grid  } from '@material-ui/core/';
 import Tree from 'react-tree-graph';
+import RevertIcon from '@material-ui/icons/Replay';
+import Footer from './Footer'
 
 import 'react-tree-graph/dist/style.css';
 import './style/content.css';
@@ -60,7 +62,7 @@ class Content extends React.Component {
                         onClick : (event, key) => this.fetchResult(event, key)
                     },
             nodeProps : { cx: 70 },
-            // textProps: { x: xPos, y: 25 }
+            textProps: { x: xPos, y: 20 }
         };
     }
 
@@ -93,51 +95,85 @@ class Content extends React.Component {
         
     }
 
+    showRevert(){
+        if(this.state.show){
+            return (
+                <Box mt={2}>
+                    <RevertIcon style={{ fontSize: 32 }} />
+                </Box>
+            );
+        }
+        return <Box></Box>;
+    }
+
+    showRes(){
+        if(this.state.show){
+            return (
+                <Box my={2}>
+                    <Typography component="h1" variant="h6" align="left">
+                        Result:
+                    </Typography>
+                </Box>
+            );
+        }
+        return <Box></Box>;
+    }
+
     showGraph(turn){
         if(this.state.show && this.state.turn === turn){
             return (
-                <Box mt={3} component="div">
-                    <Tree data={this.state.data} height={430} width={500} />
+                <Box component="div">
+                    <Tree data={this.state.data} height={580} width={500} />
                 </Box>
             );
-        } else {
-            return <Box component="div"> </Box>
+        } else if(!this.state.show) {
+            return <Box component="div" style={{ height: "170px" }} > </Box>
         }
+        return <Box component="div"> </Box>
     }
 
     render(){
         return (
-            <Container>
-                <Box component="div" className="content">
+            <Container className="contentContainer">
+                <Box component="div" className="contentBox" mt={15} mb={4} pb={5}>
                     <Container maxWidth="xs">
-                        <Box mt={6}>
-                            <Typography component="h1" variant="h5" align="left">
-                                Search ID
-                            </Typography>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="search"
-                                name="search"
-                                onChange={(event) => this.changeQuery(event)}
-                                autoComplete="search"
-                            />
-                        </Box>
-                        <Box mt={3} mb={4}>
-                            <Button
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                onClick={() => this.fetchResult(undefined, this.state.query)}
-                            >
-                                Search!
-                            </Button>
-                        </Box>
+                        <Typography component="h1" variant="h5" align="left">
+                            Search ID
+                        </Typography>
+                        <Grid container spacing={2}>
+                            <Grid item xs={11}>
+                                <TextField
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    id="search"
+                                    name="search"
+                                    onChange={(event) => this.changeQuery(event)}
+                                    autoComplete="search"
+                                />
+                            </Grid>
+                            <Grid item xs={1}>
+                                { this.showRevert() }
+                            </Grid>
+                            <Grid item xs={11}>
+                                <Box mb={4}>
+                                    <Button
+                                        fullWidth
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={() => this.fetchResult(undefined, this.state.query)}
+                                    >
+                                        Search!
+                                    </Button>
+                                </Box>
+                            </Grid>
+                        </Grid>
                     </Container>
 
+                    { this.showRes() }
                     { this.showGraph(1) }
                     { this.showGraph(2) }
+                    <Footer />
                 </Box>
             </Container>
         );

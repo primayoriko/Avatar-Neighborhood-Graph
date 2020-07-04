@@ -6,13 +6,13 @@ import Typography from '@material-ui/core/Typography'
 const NavBar = () => {
     return(
         <div>
-        <AppBar position="static">
-            <Toolbar>
-                <Typography variant="title" color="inherit">
-                    Avatar Neighborhood Site
-                </Typography>
-            </Toolbar>
-        </AppBar>
+            <AppBar position="fixed">
+                <Toolbar>
+                    <Typography variant="title" color="inherit">
+                        Avatar Neighborhood Graph Site
+                    </Typography>
+                </Toolbar>
+            </AppBar>
         </div>
     )
 }

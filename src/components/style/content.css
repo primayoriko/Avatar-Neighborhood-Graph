@@ -1,8 +1,15 @@
-.content {
+.contentBox {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    overflow: auto;
+    height: 100%;
+    /* resize: auto; */
+}
+
+.contentContainer {
+    min-height: 100%;
+    height: auto;
+    resize: auto;
 }

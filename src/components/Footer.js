@@ -1,11 +1,13 @@
 import React from 'react';
 import { Link, Typography } from '@material-ui/core/';
-import { Container, Box, Grid } from '@material-ui/core/';
+import { Container, Box} from '@material-ui/core/';
+
+import './style/footer.css';
 
 class Footer extends React.Component {
     render(){
         return (
-            <Box mt={5}>
+            <Box mt={5} className="footer" pb={2} pt={4}>
                 <Typography variant="body2" color="textSecondary" align="center">
                     {/* {'Copyright © '} */}
                     <Link color="inherit" href="https://primayoriko.github.io/">
