@@ -19,18 +19,6 @@ import './style/tree.css'
 // import Button from '@material-ui/core/Button';
 // import Container from '@material-ui/core/Container';
 
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://primayoriko.github.io/">
-                Naufal Prima Yoriko - 13518146, IF ITB '18
-            </Link>{' '}
-            <p>{new Date().getFullYear()}</p>
-        </Typography>
-    );
-}
-
 class Content extends React.Component {
     constructor(props){
         super(props);
@@ -189,10 +177,6 @@ class Content extends React.Component {
                 
                 { this.showGraph(1) }
                 { this.showGraph(2) }
-
-                <Box mt={5}>
-                    <Copyright />
-                </Box>
                 {/* <Box>
                     { this.state.status }
                 </Box> */}
