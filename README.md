@@ -56,7 +56,9 @@ Libraries & Frameworks:
 -------------------
 1. Actually, I didn't found any technical bug of the API. But, 
 2. I think there are some logical bugs according to description of the question/problem. If this API represent relation of someone with their friend(s), it shouldn't:
-   2.1 Can be friended with themself (So, if parent is ID 1, there shouldn't be any friends with ID 1)
-   2.2 There are duplicates in the friends data (for example someone with ID 1 could have 2 friend's node with same ID that have number of 5) 
-I'm try to solve this by making filter function to filter the data before It's shown. But, I think it would be  better if the server resolve the problem by implementing filter in the server-side, so data from the API have been cleaned.
+    * Can be friended with themself (So, if parent is ID 1, there shouldn't be any friends with ID 1).
+    * There are duplicates in the friends data (for example someone with ID 1     could have 2 friend's node with same ID that have number of 5).
+    * Actually, I wondered too, why some of the relations are one-sided (A being friend with B, but not otherwise).
+
+    I'm try to solve this by making filter function to filter the data before It's shown. But, I think it would be  better if the server resolve the problem by implementing filter in the server-side, so data from the API have been cleaned.
 
