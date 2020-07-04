@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Box } from '@material-ui/core/';
+import { Box } from '@material-ui/core/';
 import NavBar from './components/NavBar'
 import Content from './components/Content'
 import './App.css';

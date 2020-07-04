@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, Typography } from '@material-ui/core/';
-import { Container, Box} from '@material-ui/core/';
+import { Box} from '@material-ui/core/';
 
 import './style/footer.css';
 
