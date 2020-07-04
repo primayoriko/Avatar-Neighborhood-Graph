@@ -10,7 +10,7 @@ import './style/tree.css';
 class Content extends React.Component {
     constructor(props){
         super(props);
-        this.state = { query : "", status : -999, message : "", data : {}, show : false, test : {}, turn : 1 };
+        this.state = { query : "", status : -9999, message : "", data : {}, show : false, test : {}, turn : 1 };
     }
 
     changeQuery(event){
@@ -66,10 +66,13 @@ class Content extends React.Component {
 
     async fetchResult(event = null, key){
         key = key.split(" ")[0];
+
         if(!isNaN(key)){
             const url = 'https://avatar.labpro.dev/friends/' + key;
-            const data = await fetch(url).then((res) => res.json())
-                        .then((data) => this.parseData(data));
+            const data = await fetch(url).then((res) => res.json(), (error) => { throw new Error(error) })
+                        .then((data) => this.parseData(data))
+                        .catch((error) => { alert(error) });
+
             if (this.state.status === 200){
                 const filteredFriend = this.filterFriendData(Object.values(data.friend), data.self.id)
                 const self = this.fillNodeData(data.self, true) 
@@ -81,7 +84,7 @@ class Content extends React.Component {
                                 turn : (this.state.turn % 2) + 1 
                                 // test : data 
                             });
-            } else {
+            } else if (this.state.status !== -9999){
                 alert(`Error ${this.state.status}\n${this.state.message}`);
             }
         } else {
@@ -93,19 +96,19 @@ class Content extends React.Component {
     showGraph(turn){
         if(this.state.show && this.state.turn === turn){
             return (
-                <Box mt={3}>
+                <Box mt={3} component="div">
                     <Tree data={this.state.data} height={430} width={500} />
                 </Box>
             );
         } else {
-            return <Box> </Box>
+            return <Box component="div"> </Box>
         }
     }
 
     render(){
         return (
             <Container>
-                <Box className="content" style={{overflowY : 'auto'}}>
+                <Box component="div" className="content">
                     <Container maxWidth="xs">
                         <Box mt={6}>
                             <Typography component="h1" variant="h5" align="left">
