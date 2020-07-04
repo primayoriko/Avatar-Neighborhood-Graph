@@ -30,6 +30,7 @@ Libraries & Frameworks:
         npm start
 
 6. Look at the terminal, and wait until it's redirect you into your local server
+   ![Successfully Compiled Message](docs/compiledMessage.png)
 7. If you could see the GUI of the web, then It's finish and ready to use
    ![Start Screen](docs/startScreen.png)
 
@@ -43,7 +44,7 @@ Libraries & Frameworks:
 5. There is revert button too, if you want to erase the graph result that have been shown.
    ![Revert Button](docs/revertButton.png)
 6. If there is something wrong, there should be shown a message box to let you know what is the problem.
-7. ![Error Message](docs/errorMessage.png)
+   ![Error Message](docs/errorMessage.png)
 
 ## About The App
 -------------
