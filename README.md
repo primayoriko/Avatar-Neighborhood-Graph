@@ -50,7 +50,7 @@ Libraries & Frameworks:
 1. This app have a text field and a button that used as search engine to fetch data from the API server.
 2. The result will be shown as a graph (or you could say it a tree, too) that every person representated as a node, and link between them symbolize that they're connected.
 3. There is identity at every node that consists of the person's ID and name.
-4. Color of the node symbolize their element. 
+4. Color of the node symbolize their element, where orange is fire, blue is water, brown is earth, and grey is air element. 
 
 ## API Review
 -------------------
