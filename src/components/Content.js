@@ -4,20 +4,8 @@ import { CssBaseline, Container, Box, Grid  } from '@material-ui/core/';
 import Tree from 'react-tree-graph';
 
 import 'react-tree-graph/dist/style.css';
-import './style/tree.css'
-
-// import { spacing } from '@material-ui/system';
-// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-// import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import Checkbox from '@material-ui/core/Checkbox';
-// import Avatar from '@material-ui/core/Avatar';
-// import Grid from '@material-ui/core/Grid';
-// import Box from '@material-ui/core/Box';
-// import TextField from '@material-ui/core/TextField';
-// import { makeStyles } from '@material-ui/core/styles';
-// import CssBaseline from '@material-ui/core/CssBaseline';
-// import Button from '@material-ui/core/Button';
-// import Container from '@material-ui/core/Container';
+import './style/content.css';
+import './style/tree.css';
 
 class Content extends React.Component {
     constructor(props){
@@ -58,13 +46,21 @@ class Content extends React.Component {
         return res;
     }
 
-    fillNodeData(node){
+    fillNodeData(node, parent=false){
+        var xPos;
+        if(parent){
+            xPos = -10;
+        } else{
+            xPos = -70;
+        }
         return { 
             name : `${node.id} ${node.name}`, 
             gProps : { 
                         className : `node ${node.element}`, 
-                        onClick : (event, key) => this.fetchResult(event, key) 
-                    } 
+                        onClick : (event, key) => this.fetchResult(event, key)
+                    },
+            nodeProps : { cx: 70 },
+            // textProps: { x: xPos, y: 25 }
         };
     }
 
@@ -76,7 +72,7 @@ class Content extends React.Component {
                         .then((data) => this.parseData(data));
             if (this.state.status === 200){
                 const filteredFriend = this.filterFriendData(Object.values(data.friend), data.self.id)
-                const self = this.fillNodeData(data.self) 
+                const self = this.fillNodeData(data.self, true) 
                 const child = filteredFriend.map((node) => this.fillNodeData(node)) //{
                 self["children"] = child;
                 this.setState({ 
@@ -98,59 +94,23 @@ class Content extends React.Component {
         if(this.state.show && this.state.turn === turn){
             return (
                 <Box mt={3}>
-                    <Tree data={this.state.data} height={400} width={450} />
+                    <Tree data={this.state.data} height={430} width={500} />
                 </Box>
             );
         } else {
             return <Box> </Box>
         }
-            // if(this.state.status === 200){
-            // }
-            // else{
-            //     return (
-            //         <Box>
-            //             <Typography component="h1" variant="h4">
-            //                 ERROR {this.state.code}!
-            //             </Typography>
-            //             <Typography component="h1" variant="h6">
-            //                 Image can't be displayed
-            //             </Typography>
-            //         </Box>
-            //     );
-            // }
     }
 
     render(){
-        const classes = makeStyles((theme) => ({
-            paper: {
-                marginTop: theme.spacing(8),
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-            },
-            avatar: {
-                margin: theme.spacing(1),
-                backgroundColor: theme.palette.secondary.main,
-            },
-            form: {
-                width: '100%',
-                marginTop: theme.spacing(3),
-            },
-            submit: {
-                margin: theme.spacing(3, 0, 2),
-            },
-        }));
-        
         return (
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <Box className={classes.paper} mt={6}>
-                    <Typography component="h1" variant="h5">
-                        Search ID
-                    </Typography>
-                    <Box className={classes.form}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
+            <Container>
+                <Box className="content" style={{overflowY : 'auto'}}>
+                    <Container maxWidth="xs">
+                        <Box mt={6}>
+                            <Typography component="h1" variant="h5" align="left">
+                                Search ID
+                            </Typography>
                             <TextField
                                 variant="outlined"
                                 required
@@ -160,32 +120,22 @@ class Content extends React.Component {
                                 onChange={(event) => this.changeQuery(event)}
                                 autoComplete="search"
                             />
-                            </Grid>
-                        </Grid>
-                        <Button
-                            // type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}
-                            onClick={() => this.fetchResult(undefined, this.state.query)}
-                        >
-                            Search!
-                        </Button>
-                    </Box>
+                        </Box>
+                        <Box mt={3} mb={4}>
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                onClick={() => this.fetchResult(undefined, this.state.query)}
+                            >
+                                Search!
+                            </Button>
+                        </Box>
+                    </Container>
+
+                    { this.showGraph(1) }
+                    { this.showGraph(2) }
                 </Box>
-                
-                { this.showGraph(1) }
-                { this.showGraph(2) }
-                {/* <Box>
-                    { this.state.status }
-                </Box> */}
-                {/* <Box>
-                    { JSON.stringify(this.state.test) }
-                </Box> */}
-                {/* <Box>
-                    { JSON.stringify(this.state.data) }
-                </Box> */}
             </Container>
         );
     }
