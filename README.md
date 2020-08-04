@@ -14,7 +14,7 @@ Libraries & Frameworks:
 1. [React JS](https://reactjs.org) v16.13.1 then created with create-react-app
 2. [Material UI](https://material-ui.com) with core v.4.10.2, icons v.4.9.1, system v4.9.14
 3. [React Tree Graph](https://www.npmjs.com/package/react-tree-graph) v4.1.1
-4. For deploying on Heroku purpose, I used [heroku-cra-node](https://github.com/mars/heroku-cra-node) as the build pack.
+4. For deploying on Heroku purpose, I used [create-react-app-buildpack](https://github.com/mars/create-react-app-buildpack) as the build pack.
 
 ## How to run in local
 --------------------
